@@ -114,14 +114,14 @@ void imprimir(int matriz[][10])
 	}
 }
 
-/** Verifica se o player bateu em algum iten
+/** Verifica se o player bateu em algum item
  *  returns:	
  *  0 para nenhum
  *  1 para armadilha
  *  2 para tocha
  *	3 para tesouro
  */
-int verificaColisao(int campoOperacao[][10], int currentX[], int currentY[], int player, int vida[]) 
+int verificaColisao(int campoOperacao[][10], int currentX[], int currentY[], int player, int vida[], int initialLife) 
 {
 	int arrayPosition, arrayPosition2, player2;
 	
@@ -146,6 +146,9 @@ int verificaColisao(int campoOperacao[][10], int currentX[], int currentY[], int
 	
 	// Não encontrou nada
 	if (campoOperacao[y][x] == 0 || campoOperacao[y][x] == -1 || campoOperacao[y][x] == -2) { 
+		pointerPositionXY(0, 13);
+		printf("CAMPO LIMPO                                                      ");
+		// printf("O PLAYER 0%d ENCONTROU UMA TOCHA                              ", player);
 		return 0;
 	} 
 	
@@ -158,7 +161,7 @@ int verificaColisao(int campoOperacao[][10], int currentX[], int currentY[], int
 		// Info e diminuindo vida do player
 		if (player == 1) pointerPositionXY(30, 1);
 		else pointerPositionXY(30, 3);
-		printf("PLAYER 0%d    HP:%d/5\n", player, --vida[player - 1]);
+		printf("PLAYER 0%d    HP:%d/%d\n", player, --vida[player - 1], initialLife);
 		
 		campoOperacao[y][x] = 0; // Desabilitando armadilha
 		
@@ -356,8 +359,10 @@ void start(int campoInterface[][10], int campoOperacao[][10])
 	// Iniciando variáveis
 	// Posições de cada player
 	int currentX[] = { 0, 18 }, currentY[] = { 0, 0 }, currentPlayer = 1;
+	// Representa a quantidade inicial de vidas dos players
+	int initialLife = 9;
 	// Vidas de cada player
-	int vida[2] = { 5, 5 };
+	int vida[2] = { initialLife, initialLife };
 	// Tecla inserida pelo player
 	char key = 'i';
 	// Variaveis auxiliares das posições do player que está jogando
@@ -391,9 +396,9 @@ void start(int campoInterface[][10], int campoOperacao[][10])
     
     // Desenhando info dos players
     pointerPositionXY(30, 1);
-	printf("PLAYER 01    HP:%d/5\n", vida[0]);
+	printf("PLAYER 01    HP:%d/%d\n", vida[0], initialLife);
 	pointerPositionXY(30, 3);
-	printf("PLAYER 02    HP:%d/5\n", vida[1]);
+	printf("PLAYER 02    HP:%d/%d\n", vida[1], initialLife);
 	pointerPositionXY(0, 16);
 	printf("PLAYER 0%d PODE ANDAR %d CASAS ", currentPlayer, contChanged);
 	
@@ -405,7 +410,7 @@ void start(int campoInterface[][10], int campoOperacao[][10])
 				if (currentPlayer == 1) { // Lógica para o player 1
 					drawIten(auxX, auxY, " "); // Desenha um espaço vazia na posição antiga do player
 					drawIten(currentX[0], currentY[0], "1"); // Desenha o player na sua próxima posição
-					colisao = verificaColisao(campoOperacao, currentX, currentY, 1, vida); // Verifica se o player colidiu com algum item
+					colisao = verificaColisao(campoOperacao, currentX, currentY, 1, vida, initialLife); // Verifica se o player colidiu com algum item
 					contChanged--;
 					// Verifica se o player ainda tem jogadas
 					if (contChanged <= 0) {
@@ -419,7 +424,7 @@ void start(int campoInterface[][10], int campoOperacao[][10])
 				} else { // Lógica para o player 2
 					drawIten(auxX, auxY, " "); // Desenha um espaço vazia na posição antiga do player
 					drawIten(currentX[1], currentY[1], "2"); // Desenha o player na sua próxima posição
-					colisao = verificaColisao(campoOperacao, currentX, currentY, 2, vida); // Verifica se o player colidiu com algum item
+					colisao = verificaColisao(campoOperacao, currentX, currentY, 2, vida, initialLife); // Verifica se o player colidiu com algum item
 					contChanged--;
 					// Verifica se o player ainda tem jogadas
 					if (contChanged <= 0) {
@@ -460,6 +465,53 @@ void start(int campoInterface[][10], int campoOperacao[][10])
 	}
 }
 
+void apresentaComandos() {
+	system("CLS");	
+	
+	printf("\n\nBEM-VINDO AO TRAP-GOLD");
+	printf("\n\nJogo desenvolvido por Allef Douglas (@ParzivalAD)");
+	
+	
+	printf("\n\n\nOBJETIVO: Encontre o Tesouro!");
+	
+	
+	printf("\n\n\nITENS:");
+	
+	printf("\n\nNo jogo, existem TOCHAS, ARMADILHAS e TESOURO.");
+	
+	printf("\n\nTOCHAS : Faz com que enxergue 4 blocos ao seu redor -> sao representadas pelo simbolo !");
+	printf("\nARMADILHAS: Tira uma vida -> sao representadas pelo simbolo x");
+	printf("\nTESOURO: Ganha o jogo -> e representado pelo simbolo +");
+	printf("\nO campo nao explorado e representado pelo simbolo *");
+	
+	printf("\n\n\nVIDAS:");
+	
+	printf("\n\nCada jogador tem 8 vidas");
+
+	
+	printf("\n\n\nCONTROLES:");
+	
+	printf("\n\nPlayer 1: ");
+	printf("\nW, A, S, D ( CIMA, ESQUERDA, BAIXO, DIREITA )");
+	printf("\n\nPlayer 2:");
+	printf("\n8, 4, 5, 6 ( CIMA, ESQUERDA, BAIXO, DIREITA )");
+	
+	
+	printf("\n\n\n\nPRECIONE QUALUQER TECLA PARA INICIAR");
+	printf("\n\n=============================================================");
+	
+	// Faz com que o cursor volte para o início, caso a tela tenha feito scroll
+	pointerPositionXY(0, 0);
+	printf("=============================================================");
+
+	char key = 'a';
+	
+	// Aguarda o usuário apertar enter
+	while((key = kbhit()) == false) { } 
+	
+	system("CLS");
+}
+
 int main()
 {
     // caminho   = 0
@@ -468,7 +520,9 @@ int main()
     // tesouro   = 3
 
 	srand(time(NULL));
-
+	
+	apresentaComandos();
+	
 	// Campo desenhado na tela
     int campoInterface[10][10];
     // Campo de itens não desenhado
