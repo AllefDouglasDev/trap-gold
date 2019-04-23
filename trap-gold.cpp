@@ -31,7 +31,7 @@ void drawIten(int x, int y, char content[])
  * int contador
  * int numero
  */
-void inserirItens(int matriz[][10], int porc, int cont, int num) 
+void fillMatriz(int matriz[][10], int porc, int cont, int num) 
 {
 	int randPorc, contIten = 0;
 	
