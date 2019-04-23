@@ -6,13 +6,17 @@
 #include<conio.h>
 #include<iostream>
 
-/** Altera a posição de onde o conteúdo do printf vai ser impresso, a partir da posição x e y */
+/** 
+ * Altera a posição de onde o conteúdo do printf vai ser impresso, a partir da posição x e y 
+ */
 void pointerPositionXY(int x, int y)
 {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), (COORD){ x, y });
 }
 
-/** Desenha um item na tela na posição indicada */
+/** 
+ * Desenha um item na tela na posição indicada
+ */
 void drawIten(int x, int y, char content[]) 
 {
 	pointerPositionXY(x, y);
@@ -20,19 +24,20 @@ void drawIten(int x, int y, char content[])
 }
 
 /** 
-*   Preenche a matrix com o numero passado
-*   Depende da porcentagem e o numero maximo a ser inserido
-*   int matrix[][]
-*   int porcentagem
-*   int contador
-*   int numero
-**/
+ * Preenche a matrix com o valor informado
+ * Depende da porcentagem e o numero maximo a ser inserido
+ * int matrix[][]
+ * int porcentagem
+ * int contador
+ * int numero
+ */
 void inserirItens(int matriz[][10], int porc, int cont, int num) 
 {
 	int randPorc, contIten = 0;
 	
-    for(int i = 0; i < 10; i++){
-		for(int j = 0; j < 10; j++){
+    for(int i = 0; i < 10; i++)
+		for(int j = 0; j < 10; j++)
+		{
 			randPorc = rand() % 100; // Sorteia um numero de 0 a 99
 			
             if (randPorc < porc && contIten < cont) {
@@ -40,7 +45,6 @@ void inserirItens(int matriz[][10], int porc, int cont, int num)
                 matriz[i][j] = num;
             }
 		}
-	}
 }
 
 /** Preenche a matriz de operação com valores aleatórios das tochas, armadilhas e tesouro */
